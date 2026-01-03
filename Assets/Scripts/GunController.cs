@@ -3,8 +3,9 @@ using UnityEngine;
 public class GunController : MonoBehaviour
 {
     [Header("設定")]
-    public float range = 100f;
-    public Transform playerCamera;
+    [SerializeField] private float damage = 1f;
+    [SerializeField] private float range = 100f;
+    [SerializeField] private Transform playerCamera;
 
     private PlayerControls inputActions;
 
@@ -24,7 +25,7 @@ public class GunController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (inputActions.Player.Fire.triggered)
         {
@@ -32,7 +33,7 @@ public class GunController : MonoBehaviour
         }
     }
 
-    void Shoot()
+    private void Shoot()
     {
         RaycastHit hit;
 
@@ -41,6 +42,13 @@ public class GunController : MonoBehaviour
             Debug.Log("Hit: " + hit.transform.name);
 
             Debug.DrawLine(playerCamera.position, hit.point, Color.red, 0.5f);
+
+            EnemyController enemy = hit.transform.GetComponent<EnemyController>();
+
+            if (enemy != null)
+            {
+                enemy.OnHit(damage);
+            }
         }
     }
 }
